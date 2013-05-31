@@ -34,7 +34,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>httpcomponents-asyncclient</artifactId>
   <name>HttpComponents AsyncClient</name>
-  <version>4.0-beta3-atlassian-1-SNAPSHOT</version>
+  <version>4.0-beta3-atlassian2</version>
   <description>Components to build asynchronous client side HTTP services</description>
   <url>http://hc.apache.org/httpcomponents-asyncclient</url>
   <inceptionYear>2010</inceptionYear>
@@ -84,7 +84,7 @@
     <maven.compile.target>1.5</maven.compile.target>
     <maven.compile.optimize>true</maven.compile.optimize>
     <maven.compile.deprecation>true</maven.compile.deprecation>
-    <httpcore.version>4.2.2</httpcore.version>
+    <httpcore.version>4.2.2-atlassian1</httpcore.version>
     <httpclient.version>4.2.1-atlassian-2</httpclient.version>
     <commons-logging.version>1.1.1</commons-logging.version>
     <!-- Note IO 2.3+ requires Java 6 -->

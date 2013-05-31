@@ -55,11 +55,12 @@ public class PoolingClientAsyncConnectionManager
     private final HttpNIOConnPool pool;
     private final AsyncSchemeRegistry schemeRegistry;
     private final ClientAsyncConnectionFactory connFactory;
+    private final long leaseTimeout;
 
     public PoolingClientAsyncConnectionManager(
             final ConnectingIOReactor ioreactor,
             final AsyncSchemeRegistry schemeRegistry,
-            final long timeToLive, final TimeUnit tunit) {
+            final long timeToLive, final long leaseTimeout, final TimeUnit tunit) {
         super();
         if (ioreactor == null) {
             throw new IllegalArgumentException("I/O reactor may not be null");
@@ -74,6 +75,14 @@ public class PoolingClientAsyncConnectionManager
         this.pool = new HttpNIOConnPool(this.log, ioreactor, schemeRegistry, timeToLive, tunit);
         this.schemeRegistry = schemeRegistry;
         this.connFactory = createClientAsyncConnectionFactory();
+        this.leaseTimeout = leaseTimeout;
+    }
+
+    public PoolingClientAsyncConnectionManager(
+            final ConnectingIOReactor ioreactor,
+            final AsyncSchemeRegistry schemeRegistry,
+            final long timeToLive, final TimeUnit tunit) {
+        this(ioreactor, schemeRegistry, timeToLive, -1, tunit);
     }
 
     public PoolingClientAsyncConnectionManager(
@@ -173,7 +182,8 @@ public class PoolingClientAsyncConnectionManager
         }
         BasicFuture<ManagedClientAsyncConnection> future = new BasicFuture<ManagedClientAsyncConnection>(
                 callback);
-        this.pool.lease(route, state, connectTimeout, tunit, new InternalPoolEntryCallback(future));
+        this.pool.closeExpired();
+        this.pool.lease(route, state, connectTimeout, this.leaseTimeout, tunit, new InternalPoolEntryCallback(future));
         return future;
     }
 
